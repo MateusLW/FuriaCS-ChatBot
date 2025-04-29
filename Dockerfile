@@ -20,5 +20,8 @@ COPY --from=builder /app/target/*-jar-with-dependencies.jar app.jar
 # Environment variables
 ENV JAVA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
 
+EXPOSE 8080
+CMD ["sh", "-c", "java -jar app.jar --server.port=${PORT}"]
+
 # Entry point
 ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
