@@ -10,6 +10,7 @@ public class Main
     {
         try 
         {
+            System.out.println("Iniciando bot...");
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
             botsApi.registerBot(new FuriaCSBot()); //inicia o bot
             System.out.println("Bot iniciado com sucesso!");
