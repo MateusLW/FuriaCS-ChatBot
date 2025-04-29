@@ -1,26 +1,24 @@
-# Estágio 1: Build (compilação com Maven)
-FROM maven:3.8.6-eclipse-temurin-17 AS builder  # Imagem oficial com JDK 17
+# Build stage (with Maven and JDK 17)
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
 
-# 1. Copia apenas o POM primeiro (cache mais eficiente)
 WORKDIR /app
 COPY pom.xml .
+# Cache dependencies
 RUN mvn dependency:go-offline -B
 
-# 2. Copia o código-fonte e compila
 COPY src ./src
+# Build the application
 RUN mvn package -DskipTests
 
-# --------------------------------------------------------
-
-# Estágio 2: Runtime (imagem final leve)
+# Runtime stage (with JRE only)
 FROM eclipse-temurin:17-jre-alpine
 
-# 3. Configura ambiente
 WORKDIR /app
-COPY --from=builder /app/target/*-jar-with-dependencies.jar ./app.jar
+# Copy the built JAR from builder stage
+COPY --from=builder /app/target/*-jar-with-dependencies.jar app.jar
 
-# 4. Otimizações para containers
+# Environment variables
 ENV JAVA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
 
-# 5. Comando de execução
-CMD ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
+# Entry point
+ENTRYPOINT ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
