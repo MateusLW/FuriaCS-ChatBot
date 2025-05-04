@@ -1,27 +1,26 @@
-# Estágio de construção
-FROM maven:3.8.6-openjdk-11 AS builder
+# Estágio 1: Build (compilação com Maven)
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
 
+# 1. Copia apenas o POM primeiro (cache mais eficiente)
 WORKDIR /app
-
-# 1. Copia os arquivos de construção primeiro
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# 2. Copia o código-fonte e compila
 COPY src ./src
+RUN mvn package -DskipTests
 
-# 2. Define a variável de ambiente ANTES do build
-ARG BOT_TOKEN
-ENV BOT_TOKEN=$BOT_TOKEN
+# --------------------------------------------------------
 
-# 3. Baixa dependências e faz o build (com cache otimizado)
-RUN mvn dependency:resolve
-RUN mvn clean package -DskipTests
+# Estágio 2: Runtime (imagem final leve)
+FROM eclipse-temurin:17-jre-alpine
 
-# Estágio de execução
-FROM openjdk:11-jre-slim
-
+# 3. Configura ambiente
 WORKDIR /app
+COPY --from=builder /app/target/*-jar-with-dependencies.jar ./app.jar
 
-# 4. Copia apenas o JAR construído
-COPY --from=builder /app/target/*.jar ./app.jar
+# 4. Otimizações para containers
+ENV JAVA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
 
-# 5. Define o comando de execução
-CMD ["java", "-jar", "app.jar"]
+# 5. Comando de execução
+CMD ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
