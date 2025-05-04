@@ -1,5 +1,5 @@
 # Estágio 1: Build (compilação com Maven)
-FROM maven:3.8.6-eclipse-temurin-17 AS builder
+FROM maven:3.8.6-openjdk-11 AS builder
 
 # 1. Copia apenas o POM primeiro (cache mais eficiente)
 WORKDIR /app
