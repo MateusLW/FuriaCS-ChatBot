@@ -29,7 +29,7 @@ public class FuriaCSBot extends TelegramLongPollingBot
     }
     
     @Override
-    private String getBotToken() 
+    public String getBotToken() 
     {
         return System.getenv("BOT_TOKEN");
     }    
