@@ -80,14 +80,17 @@ public class Responder
     );
 
     respostas.add(ResponseType.PROXIMO_JOGO.getCode(), 
-    "No momento estamos sem partida agendada, mas nosso próximo torneio começa dia 12/05, então fique ligado!👾\n\n"
+    "Próxima partida:\n"+
+    "Furia x TheMongolz\n\n"+
+    "Transmissão: PGL Twitch\n\n"+
+    "Esperamos você lá!💪💪"
     );
 
     respostas.add(ResponseType.ULTIMO_RESULTADO.getCode(), 
         "Nosso ultimo jogo foi:\n\n" +
         "FURIA: 0\n" +
         "TheMongolZ: 2\n\n" +
-        "Não foi dessa fez, mas permaneceremos fortes para a próxima💪!\n\n"
+        "Não foi dessa fez, mas permaneceremos fortes para a próxima!💪\n\n"
     );
         
     }
