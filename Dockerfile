@@ -20,7 +20,9 @@ WORKDIR /app
 COPY --from=builder /app/target/*-jar-with-dependencies.jar ./app.jar
 
 # 4. Otimizações para containers
-ENV JAVA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
+ENV JAVA_OPTS=$JAVA_OPTS
+ARG BOT_TOKEN
+ENV BOT_TOKEN=$BOT_TOKEN
 
 # 5. Comando de execução
 CMD ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
