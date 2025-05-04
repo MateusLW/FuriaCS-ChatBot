@@ -1,26 +1,28 @@
-FROM maven:3.8.6-openjdk-17 AS builder
+# Estágio de build
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
 
 WORKDIR /app
 
-ARG BOT_TOKEN # Recebe via --build-arg
-ENV BOT_TOKEN=${BOT_TOKEN} # Transforma em ENV para o Maven
-
-# 1. Copiar apenas o POM primeiro para cache eficiente
+# 1. Cache de dependências (otimização)
 COPY pom.xml .
 RUN mvn -B dependency:go-offline
 
-# 2. Copiar fontes e compilar
+# 2. Copia o código e builda
 COPY src ./src
+RUN mvn -B package -DskipTests \
+    -Dmaven.test.skip=true \
+    -Dmaven.compile.fork=true
 
-# 3. Build com configurações robustas
-RUN mvn -B \
-    -DskipTests \
-    -Dmaven.javadoc.skip=true \
-    -Dmaven.compile.fork=true \
-    clean package
-
-# Estágio de produção
+# Estágio de execução
 FROM eclipse-temurin:17-jre
 WORKDIR /app
+
+# 3. Copia apenas o JAR (segurança)
 COPY --from=builder /app/target/*.jar app.jar
-CMD ["java", "-jar", "app.jar"]
+
+# 4. Variáveis de ambiente (boas práticas)
+ENV BOT_TOKEN=${BOT_TOKEN} \
+    JAVA_OPTS="-Xmx256m"
+
+# 5. Entrypoint seguro
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar --token=${BOT_TOKEN}"]
