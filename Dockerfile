@@ -1,28 +1,12 @@
-# Estágio 1: Build (compilação com Maven)
 FROM maven:3.8.6-openjdk-11 AS builder
-
-# 1. Copia apenas o POM primeiro (cache mais eficiente)
 WORKDIR /app
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# 2. Copia o código-fonte e compila
+RUN mvn dependency:go-offline
 COPY src ./src
 RUN mvn package -DskipTests
-
-# --------------------------------------------------------
-
-# Estágio 2: Runtime (imagem final leve)
-FROM eclipse-temurin:17-jre-alpine
-
-# 3. Configura ambiente
+ARG TELEGRAM_BOT_TOKEN
+ENV TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
+FROM openjdk:11-jre-slim
 WORKDIR /app
-COPY --from=builder /app/target/*-jar-with-dependencies.jar ./app.jar
-
-# 4. Otimizações para containers
-ENV JAVA_OPTS=$JAVA_OPTS
-ARG BOT_TOKEN
-ENV BOT_TOKEN=$BOT_TOKEN
-
-# 5. Comando de execução
-CMD ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
+COPY --from=builder /app/target/seu-bot.jar .
+CMD ["java", "-jar", "seu-bot.jar"]
