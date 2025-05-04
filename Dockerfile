@@ -8,8 +8,8 @@ COPY pom.xml .
 COPY src ./src
 
 # 2. Define a variável de ambiente ANTES do build
-ARG TELEGRAM_BOT_TOKEN
-ENV TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN
+ARG BOT_TOKEN
+ENV BOT_TOKEN=$BOT_TOKEN
 
 # 3. Baixa dependências e faz o build (com cache otimizado)
 RUN mvn dependency:resolve
