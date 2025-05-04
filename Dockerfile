@@ -11,7 +11,7 @@ RUN mvn dependency:go-offline
 RUN mvn clean package -DskipTests
 
 # Estágio de execução final
-FROM eclipse-temurin:17-jre-jammy
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copiar o JAR construído
