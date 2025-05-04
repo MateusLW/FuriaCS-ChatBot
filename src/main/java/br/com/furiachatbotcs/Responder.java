@@ -80,7 +80,7 @@ public class Responder
     );
 
     respostas.add(ResponseType.PROXIMO_JOGO.getCode(), 
-    "Próxima partida:\n"+
+    "Próxima partida: 10/05 - 05:00\n"+
     "Furia x TheMongolz\n\n"+
     "Transmissão: PGL Twitch\n\n"+
     "Esperamos você lá!💪💪"
