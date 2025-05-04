@@ -1,32 +1,26 @@
-# Estágio de construção com Maven
-FROM maven:3.8.6-openjdk-17 AS builder
-WORKDIR /app
+# Estágio 1: Build (compilação com Maven)
+FROM maven:3.8.6-eclipse-temurin-17 AS builder
 
-# Copiar apenas os arquivos necessários primeiro (para melhor cache)
+# 1. Copia apenas o POM primeiro (cache mais eficiente)
+WORKDIR /app
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# 2. Copia o código-fonte e compila
 COPY src ./src
+RUN mvn package -DskipTests
 
-# Baixar dependências e construir o projeto
-RUN mvn dependency:go-offline
-RUN mvn clean package -DskipTests
+# --------------------------------------------------------
 
-# Estágio de execução final
-FROM openjdk:17-jdk-slim
+# Estágio 2: Runtime (imagem final leve)
+FROM eclipse-temurin:17-jre-alpine
+
+# 3. Configura ambiente
 WORKDIR /app
+COPY --from=builder /app/target/*-jar-with-dependencies.jar ./app.jar
 
-# Copiar o JAR construído
-COPY --from=builder /app/target/furia-chatbot-cs-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
+# 4. Otimizações para containers
+ENV JAVA_OPTS="-Xmx512m -Dfile.encoding=UTF-8"
 
-# Variáveis de ambiente (serão configuradas no docker run)
-ENV BOT_TOKEN="7671407981:AAHtT4GgFRKlrsjXGrUY_3CkFt9HxTM_zuc"
-ENV BOT_USERNAME="FuriaCSBot"
-
-# Usuário não-root para segurança
-RUN groupadd -r javagroup && \
-    useradd -r -g javagroup javauser && \
-    chown -R javauser:javagroup /app
-
-USER javauser
-
-# Comando de execução
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 5. Comando de execução
+CMD ["sh", "-c", "java ${JAVA_OPTS} -jar app.jar"]
