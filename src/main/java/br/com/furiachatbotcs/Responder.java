@@ -90,7 +90,7 @@ public class Responder
         "Nosso ultimo jogo foi:\n\n" +
         "FURIA: 0\n" +
         "TheMongolZ: 2\n\n" +
-        "Não foi dessa fez, mas permaneceremos fortes para a próxima!💪\n\n"
+        "Não foi dessa vez, mas permaneceremos fortes para a próxima!💪\n\n"
     );
         
     }
