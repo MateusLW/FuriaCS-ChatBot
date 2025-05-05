@@ -25,16 +25,6 @@
         
     </dependencies>
          
-         <settings>
-           <mirrors>
-             <mirror>
-               <id>central</id>
-               <url>https://repo.maven.apache.org/maven2</url>
-               <mirrorOf>central</mirrorOf>
-             </mirror>
-           </mirrors>
-         </settings>
-         
     <security>
       <bot-token>${env.BOT_TOKEN}</bot-token>
     </security>
