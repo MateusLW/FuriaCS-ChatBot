@@ -1,3 +1,4 @@
+# Estágio de construção
 FROM maven:3.8.6-eclipse-temurin-17 AS builder
 
 WORKDIR /app
@@ -21,3 +22,17 @@ RUN mvn -B package \
 FROM eclipse-temurin:17-jre
 COPY --from=builder /app/target/*.jar app.jar
 CMD ["java", "-jar", "app.jar"]
+
+# Estágio de execução
+FROM eclipse-temurin:17-jre
+WORKDIR /app
+
+# 4. Copia apenas o artefato final
+COPY --from=builder /app/target/FuriaCS-ChatBot-*.jar app.jar
+
+# 5. Configuração segura
+ENV BOT_TOKEN=${BOT_TOKEN} \
+    JAVA_OPTS="-Xmx256m -XX:+UseContainerSupport"
+
+# 6. Entrypoint otimizado
+ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -jar app.jar"]
