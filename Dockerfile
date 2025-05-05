@@ -7,6 +7,7 @@ WORKDIR /app
 
 ARG BOT_TOKEN
 ENV BOT_TOKEN=${BOT_TOKEN}
+ENV MAVEN_OPTS="-Xmx512m -XX:+TieredCompilation -XX:TieredStopAtLevel=1"
 
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
