@@ -33,6 +33,7 @@ COPY --from=builder /app/target/FuriaCS-ChatBot-*.jar app.jar
 # 5. Configuração segura
 ENV BOT_TOKEN=${BOT_TOKEN} \
     JAVA_OPTS="-Xmx256m -XX:+UseContainerSupport"
+ENV MAVEN_OPTS="-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true"
 
 # 6. Entrypoint otimizado
 ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS} -jar app.jar"]
