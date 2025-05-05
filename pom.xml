@@ -24,6 +24,10 @@
         
         
     </dependencies>
+         
+    <security>
+      <bot-token>${env.BOT_TOKEN}</bot-token>
+    </security>
 
     <build>
         <plugins>
