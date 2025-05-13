@@ -80,17 +80,17 @@ public class Responder
     );
 
     respostas.add(ResponseType.PROXIMO_JOGO.getCode(), 
-    "Próxima partida: 11/05 - 05:00\n"+
-    "Furia x GamerLegion\n\n"+
-    "Transmissão: PGL Twitch\n\n"+
+    "Próxima partida: 19/05 - 05:00\n"+
+    "Furia x TheMongolZ\n\n"+
+    "Transmissão: Sem informações por enquanto\n\n"+
     "Esperamos você lá!💪💪"
     );
 
     respostas.add(ResponseType.ULTIMO_RESULTADO.getCode(), 
         "Nosso ultimo jogo foi:\n\n" +
-        "FURIA: 1\n" +
-        "TheMongolZ: 2\n\n" +
-        "Não foi dessa vez, mas permaneceremos fortes para a próxima!💪\n\n"
+        "FURIA: 2\n" +
+        "ODDIK: 0\n\n" +
+        "Vamos pra cima com tudo!💪\n\n"
     );
         
     }
